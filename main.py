@@ -13,6 +13,8 @@ import aiy.audio
 import aiy.voicehat
 from google.assistant.library.event import EventType
 
+aiy.voicehat.get_status_ui().set_trigger_sound_wave('googlestart.wav')
+
 logging.basicConfig(
     level=logging.INFO,
     format="[%(asctime)s] %(levelname)s:%(message)s"
