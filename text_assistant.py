@@ -1,7 +1,7 @@
 import googlesamples.assistant.grpc.textinput
 import google.auth.transport.grpc
 import google.auth.transport.requests
-import google.oaut2.credentials
+import google.oauth2.credentials
 import aiy.assistant.device_helpers as device_helpers
 
 class Text_Assistant(googlesamples.assistant.grpc.textinput.SampleTextAssistant):
@@ -18,4 +18,4 @@ class Text_Assistant(googlesamples.assistant.grpc.textinput.SampleTextAssistant)
 
         grpc_channel = google.auth.transport.grpc.secure_authorized_channel(credentials, http_request, api_endpoint)
 
-        super().__init('en-US', self._model_id, self._device_id, grpc_channel, grpc_deadline)
+        super().__init__('en-US', self._model_id, self._device_id, grpc_channel, grpc_deadline)
