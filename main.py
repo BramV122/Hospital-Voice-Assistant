@@ -12,7 +12,7 @@ from aiy.assistant.library import Assistant
 import aiy.audio
 import aiy.voicehat
 from google.assistant.library.event import EventType
-from googlesamples.assistant.gprc.textinput import SampleTextAssitant
+from text_assistant import Text_Assistant
 
 aiy.voicehat.get_status_ui().set_trigger_sound_wave('googlestart.wav')
 
@@ -35,7 +35,7 @@ class MyAssistant(object):
     def _run_task(self):
         credentials = aiy.assistant.auth_helpers.get_assistant_credentials()
         with Assistant(credentials) as assistant:
-            with SampleTextAssistant(credentials) as textassistant:
+            with Text_Assistant(credentials) as textassistant:
                 self._assistant = assistant
                 self._text_assistant = textassistant
                 for event in assistant.start():
