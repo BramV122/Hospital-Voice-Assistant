@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright 2017 Google Inc.µ
+# Copyright 2017 Google Inc.
 
 import logging
 import platform
@@ -12,6 +12,7 @@ from aiy.assistant.library import Assistant
 import aiy.audio
 import aiy.voicehat
 from google.assistant.library.event import EventType
+from googlesamples.assistant.gprc.textinput import SampleTextAssitant
 
 aiy.voicehat.get_status_ui().set_trigger_sound_wave('googlestart.wav')
 
@@ -26,6 +27,7 @@ class MyAssistant(object):
         self._task = threading.Thread(target=self._run_task)
         self._can_start_conversation = False
         self._assistant = None
+        self._text_assistant = None
 
     def start(self):
         self._task.start()
@@ -33,9 +35,11 @@ class MyAssistant(object):
     def _run_task(self):
         credentials = aiy.assistant.auth_helpers.get_assistant_credentials()
         with Assistant(credentials) as assistant:
-            self._assistant = assistant
-            for event in assistant.start():
-                self._process_event(event)
+            with SampleTextAssistant(credentials) as textassistant:
+                self._assistant = assistant
+                self._text_assistant = textassistant
+                for event in assistant.start():
+                    self._process_event(event)
 
     def _process_event(self, event):
         status_ui = aiy.voicehat.get_status_ui()
@@ -57,8 +61,9 @@ class MyAssistant(object):
 
             if 'ip address' in text:
                 self._assistant.stop_conversation()
-                ip_address = subprocess.check_output("hostname -I | cut -d' ' -f1", shell=True)
-                aiy.audio.say('My IP address is %s' % ip_address.decode('utf-8'))
+                self._text_assistant.assist("repeat hallo")
+                #ip_address = subprocess.check_output("hostname -I | cut -d' ' -f1", shell=True)
+                #aiy.audio.say('My IP address is %s' % ip_address.decode('utf-8'))
 
         elif event.type == EventType.ON_END_OF_UTTERANCE:
             status_ui.status('thinking')
