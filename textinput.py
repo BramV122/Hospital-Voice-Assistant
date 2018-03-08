@@ -19,6 +19,7 @@ from google.assistant.embedded.v1alpha2 import (
     embedded_assistant_pb2_grpc
 )
 
+import aiy.audio as audio
 import googlesamples.assistant.grpc.assistant_helpers as assistant_helpers
 
 ASSISTANT_API_ENDPOINT = 'embeddedassistant.googleapis.com'
@@ -77,7 +78,7 @@ class SampleTextAssistant(object):
                 ),
                 text_query=text_query,
             )
-            req = embedded_assistant_pb2.AssistRequest(config=config)
+            req = embedded_assistant_pb2.AssistRequest(config=config, audio_in=None)
             assistant_helpers.log_assist_request_without_audio(req)
             yield req
 
@@ -85,11 +86,13 @@ class SampleTextAssistant(object):
         for resp in self.assistant.Assist(iter_assist_requests(),
                                           self.deadline):
             assistant_helpers.log_assist_response_without_audio(resp)
+            if resp.audio_out.audio_data:
+                if len(resp.audio_out.audio_data) > 0:
+                    print("audio output detected")
+                    audio.play_audio(resp.audio_out.audio_data)
             if resp.dialog_state_out.conversation_state:
                 conversation_state = resp.dialog_state_out.conversation_state
                 self.conversation_state = conversation_state
-                if len(resp.audio_out.audio_data) > 0:
-                    print("audio output detected")
             if resp.dialog_state_out.supplemental_display_text:
                 display_text = resp.dialog_state_out.supplemental_display_text
         return display_text
