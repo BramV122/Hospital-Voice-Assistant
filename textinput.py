@@ -83,7 +83,7 @@ class SampleTextAssistant(object):
             yield req
 
         display_text = None
-        buffer = bytes
+        buffer = b''
         for resp in self.assistant.Assist(iter_assist_requests(),
                                           self.deadline):
             assistant_helpers.log_assist_response_without_audio(resp)
