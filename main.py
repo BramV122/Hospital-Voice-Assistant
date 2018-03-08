@@ -61,7 +61,7 @@ class MyAssistant(object):
 
             if 'ip address' in text:
                 self._assistant.stop_conversation()
-                print("response: " + str(self._text_assistant.assist("repeat after me hallo")))
+                print("response: " + str(self._text_assistant.assist("repeat after me hello")))
                 #ip_address = subprocess.check_output("hostname -I | cut -d' ' -f1", shell=True)
                 #aiy.audio.say('My IP address is %s' % ip_address.decode('utf-8'))
 

@@ -19,13 +19,7 @@ from google.assistant.embedded.v1alpha2 import (
     embedded_assistant_pb2_grpc
 )
 
-try:
-    from . import (
-        assistant_helpers,
-    )
-except (SystemError, ImportError):
-    import assistant_helpers
-
+import googlesamples.assistant.grpc.assistant_helpers as assistant_helpers
 
 ASSISTANT_API_ENDPOINT = 'embeddedassistant.googleapis.com'
 DEFAULT_GRPC_DEADLINE = 60 * 3 + 5
@@ -43,7 +37,7 @@ class SampleTextAssistant(object):
     """
 
     def __init__(self, language_code, device_model_id, device_id,
-                 channel, deadline_sec, conversation_stream):
+                 channel, deadline_sec):
         self.language_code = language_code
         self.device_model_id = device_model_id
         self.device_id = device_id
@@ -52,7 +46,6 @@ class SampleTextAssistant(object):
             channel
         )
         self.deadline = deadline_sec
-        self.conversation_stream = conversation_stream
 
     def __enter__(self):
         return self
@@ -96,7 +89,7 @@ class SampleTextAssistant(object):
                 conversation_state = resp.dialog_state_out.conversation_state
                 self.conversation_state = conversation_state
                 if len(resp.audio_out.audio_data) > 0:
-                    self.conversation_stream.write(resp.audio_out.audio_data)
+                    print("audio output detected")
             if resp.dialog_state_out.supplemental_display_text:
                 display_text = resp.dialog_state_out.supplemental_display_text
         return display_text
