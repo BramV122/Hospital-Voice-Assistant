@@ -1,17 +1,3 @@
-# Copyright (C) 2017 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 """Sample that implements a text client for the Google Assistant Service."""
 
 from google.assistant.embedded.v1alpha2 import (
@@ -19,6 +5,8 @@ from google.assistant.embedded.v1alpha2 import (
     embedded_assistant_pb2_grpc
 )
 
+import math
+import array
 import aiy.audio as audio
 import googlesamples.assistant.grpc.assistant_helpers as assistant_helpers
 
@@ -82,6 +70,14 @@ class SampleTextAssistant(object):
             assistant_helpers.log_assist_request_without_audio(req)
             yield req
 
+        def normalize_audio(buf, volume_percentage):
+            scale = math.pow(2, 1.0*volume_percentage/100)-1
+            arr = array.array('h', buf)
+            for idx in range(0, len(arr)):
+                arr[idx] = int(arr[idx]*scale)
+            buf = arr.tostring()
+            return buf
+
         display_text = None
         buffer = b''
         for resp in self.assistant.Assist(iter_assist_requests(),
@@ -95,5 +91,6 @@ class SampleTextAssistant(object):
                 self.conversation_state = conversation_state
             if resp.dialog_state_out.supplemental_display_text:
                 display_text = resp.dialog_state_out.supplemental_display_text
+        buffer = normalize_audio(buffer, 80)
         audio.play_audio(buffer)
         return display_text
