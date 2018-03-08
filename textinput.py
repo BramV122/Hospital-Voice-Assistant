@@ -83,16 +83,17 @@ class SampleTextAssistant(object):
             yield req
 
         display_text = None
+        buffer = bytes
         for resp in self.assistant.Assist(iter_assist_requests(),
                                           self.deadline):
             assistant_helpers.log_assist_response_without_audio(resp)
             if resp.audio_out.audio_data:
                 if len(resp.audio_out.audio_data) > 0:
-                    print("audio output detected")
-                    audio.play_audio(resp.audio_out.audio_data)
+                    buffer = buffer + resp.audio_out.audio_data
             if resp.dialog_state_out.conversation_state:
                 conversation_state = resp.dialog_state_out.conversation_state
                 self.conversation_state = conversation_state
             if resp.dialog_state_out.supplemental_display_text:
                 display_text = resp.dialog_state_out.supplemental_display_text
+        audio.play_audio(buffer)
         return display_text

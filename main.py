@@ -3,8 +3,8 @@
 
 import logging
 import platform
-import sys
 import subprocess
+import sys
 import threading
 
 import aiy.assistant.auth_helpers
@@ -61,9 +61,8 @@ class MyAssistant(object):
 
             if 'ip address' in text:
                 self._assistant.stop_conversation()
-                print("response: " + str(self._text_assistant.assist("repeat after me hello")))
-                #ip_address = subprocess.check_output("hostname -I | cut -d' ' -f1", shell=True)
-                #aiy.audio.say('My IP address is %s' % ip_address.decode('utf-8'))
+                ip_address = subprocess.check_output("hostname -I | cut -d' ' -f1", shell=True)
+                self._text_assistant.assist("repeat after me my IP address is %s" % ip_address.decode('utf-8'))
 
         elif event.type == EventType.ON_END_OF_UTTERANCE:
             status_ui.status('thinking')
