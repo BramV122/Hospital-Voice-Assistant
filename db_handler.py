@@ -3,9 +3,9 @@
 import pymysql
 
 HOST = "10.42.0.1"
-USER = "root"
-PASSWD = "SG7nsx4U"
-DB = "Voicekit"
+USER = "Voicekit"
+PASSWD = "Voicekit"
+DB = "VoiceKit"
 
 class db_handler():
 
@@ -14,16 +14,21 @@ class db_handler():
         try:
             self._db = pymysql.connect(HOST, USER, PASSWD, DB)
             self._cursor = self._db.cursor()
-        except:
+        except pymysql.InternalError as e:
             print("Something went wrong with the database")
+            print('Got error {!r}, errno is {}'.format(e, e.args[0]))
 
     def findResponse(self, KeyWords):
-        response = None
 
-        query = "SELECT Response FROM Responses WHERE KeyWords LIKE %s" % KeyWords
+        query = "SELECT Response FROM Responses WHERE KeyWords LIKE '%s'" % KeyWords
         self._cursor.execute(query)
 
-        response = self._cursor.fetchall()[0]
+        list = self._cursor.fetchall()
+        if len(list) == 1:
+            response = list[0]
+            response = response[0]
+        else:
+            response = None
 
         self._db.close()
 

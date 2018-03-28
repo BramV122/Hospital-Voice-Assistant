@@ -61,7 +61,7 @@ class MyAssistant(object):
             text = event.args['text'].lower()
 
             with db_handler() as db:
-                response = db.findResponse()
+                response = db.findResponse(text)
 
             if response:
                 self._assistant.stop_conversation()
