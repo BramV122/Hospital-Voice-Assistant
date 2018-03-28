@@ -13,6 +13,7 @@ import aiy.audio
 import aiy.voicehat
 from google.assistant.library.event import EventType
 from text_assistant import Text_Assistant
+from db_handler import db_handler
 
 aiy.voicehat.get_status_ui().set_trigger_sound_wave('googlestart.wav')
 
@@ -59,10 +60,18 @@ class MyAssistant(object):
             print('You said: ', event.args['text'])
             text = event.args['text'].lower()
 
-            if 'ip address' in text:
+            with db_handler() as db:
+                response = db.findResponse()
+
+            if response:
                 self._assistant.stop_conversation()
-                ip_address = subprocess.check_output("hostname -I | cut -d' ' -f1", shell=True)
-                self._text_assistant.assist("repeat after me my IP address is %s" % ip_address.decode('utf-8'))
+                self._text_assistant.assist("repeat after me " + response)
+
+            # if 'ip address' in text:
+            #     self._assistant.stop_conversation()
+            #     ip_address = subprocess.check_output("hostname -I | cut -d' ' -f1", shell=True)
+            #     self._text_assistant.assist("repeat after me my IP address is %s" % ip_address.decode('utf-8'))
+
 
         elif event.type == EventType.ON_END_OF_UTTERANCE:
             status_ui.status('thinking')

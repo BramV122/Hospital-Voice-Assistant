@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Sample that implements a text client for the Google Assistant Service."""
 
 from google.assistant.embedded.v1alpha2 import (
