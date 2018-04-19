@@ -10,26 +10,30 @@ DB = "VoiceKit"
 class db_handler():
 
     def __init__(self):
+        DB_Public = "VoiceKit"
+        DB_Private = "Medical"
+
+
+    def findResponse(self, KeyWords):
 
         try:
-            self._db = pymysql.connect(HOST, USER, PASSWD, DB)
-            self._cursor = self._db.cursor()
+            self._db_public = pymysql.connect(HOST, USER, PASSWD, DB)
+            cursor = self._db_public.cursor()
         except pymysql.InternalError as e:
             print("Something went wrong with the database")
             print('Got error {!r}, errno is {}'.format(e, e.args[0]))
 
-    def findResponse(self, KeyWords):
-
         query = "SELECT Response FROM Responses WHERE KeyWords LIKE '%s'" % KeyWords
-        self._cursor.execute(query)
+        cursor.execute(query)
 
-        list = self._cursor.fetchall()
-        if len(list) == 1:
-            response = list[0]
+        answers = cursor.fetchall()
+        if len(answers) == 1:
+            response = answers[0]
             response = response[0]
         else:
             response = None
+            print("query got more than 1 answer")
 
-        self._db.close()
+        self._db_public.close()
 
         return response

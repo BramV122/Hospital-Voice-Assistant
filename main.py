@@ -60,8 +60,8 @@ class MyAssistant(object):
             print('You said: ', event.args['text'])
             text = event.args['text'].lower()
 
-            with db_handler() as db:
-                response = db.findResponse(text)
+            db = db_handler()
+            response = db.findResponse(text)
 
             if response:
                 self._assistant.stop_conversation()
