@@ -15,7 +15,7 @@ audio_iter_size = audio_helpers.DEFAULT_AUDIO_ITER_SIZE
 
 class Text_Assistant(textinput.SampleTextAssistant):
 
-    def __init__(self, credentials):
+    def __init__(self, credentials, language_code):
         self._credentials = credentials
         self._model_id, self._device_id = device_helpers.get_ids_for_service(credentials)
 
@@ -27,4 +27,4 @@ class Text_Assistant(textinput.SampleTextAssistant):
 
         grpc_channel = google.auth.transport.grpc.secure_authorized_channel(credentials, http_request, api_endpoint)
 
-        super().__init__('en-US', self._model_id, self._device_id, grpc_channel, grpc_deadline)
+        super().__init__(language_code, self._model_id, self._device_id, grpc_channel, grpc_deadline)

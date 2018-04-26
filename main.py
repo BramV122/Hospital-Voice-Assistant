@@ -3,7 +3,6 @@
 
 import logging
 import platform
-import subprocess
 import sys
 import threading
 
@@ -36,7 +35,7 @@ class MyAssistant(object):
     def _run_task(self):
         credentials = aiy.assistant.auth_helpers.get_assistant_credentials()
         with Assistant(credentials) as assistant:
-            with Text_Assistant(credentials) as textassistant:
+            with Text_Assistant(credentials, aiy.i18n.get_language_code()) as textassistant:
                 self._assistant = assistant
                 self._text_assistant = textassistant
                 for event in assistant.start():
