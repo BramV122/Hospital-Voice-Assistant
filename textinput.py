@@ -79,6 +79,12 @@ class SampleTextAssistant(object):
             buf = arr.tostring()
             return buf
 
+        def getVolume():
+            f = open("~/.config/google-assistant-library/assistant/volume/system", "r")
+            volume = f.readline(0)
+            volume = float(volume) * 100
+            return volume
+
         display_text = None
         buffer = b''
         for resp in self.assistant.Assist(iter_assist_requests(),
@@ -92,6 +98,6 @@ class SampleTextAssistant(object):
                 self.conversation_state = conversation_state
             if resp.dialog_state_out.supplemental_display_text:
                 display_text = resp.dialog_state_out.supplemental_display_text
-        buffer = normalize_audio(buffer, 80)
+        buffer = normalize_audio(buffer, getVolume())
         audio.play_audio(buffer)
         return display_text

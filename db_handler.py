@@ -11,7 +11,6 @@ class db_handler():
 
     def __init__(self):
         DB_Public = "VoiceKit"
-        DB_Private = "Medical"
 
 
     def findResponse(self, KeyWords):
@@ -30,7 +29,7 @@ class db_handler():
         if len(answers) == 1:
             response = answers[0]
             response = response[0]
-        else:
+        elif len(answers) > 1:
             response = None
             print("query got more than 1 answer")
 
