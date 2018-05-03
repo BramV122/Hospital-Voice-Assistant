@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+"""Spacy needs to be installed"""
+"""This is done by:
+        pip install -U spacy
+    for the language packages:
+        python3 -m spacy download en
+        python3 -m spacy download nl"""
+
 import spacy
 
 class language_processor():
