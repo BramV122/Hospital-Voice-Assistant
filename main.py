@@ -13,7 +13,6 @@ import aiy.voicehat
 from google.assistant.library.event import EventType
 from text_assistant import Text_Assistant
 from db_handler import db_handler
-from language_processing import language_processor
 
 aiy.voicehat.get_status_ui().set_trigger_sound_wave('googlestart.wav')
 
@@ -38,12 +37,10 @@ class MyAssistant(object):
         credentials = aiy.assistant.auth_helpers.get_assistant_credentials()
         with Assistant(credentials) as assistant:
             with Text_Assistant(credentials, aiy.i18n.get_language_code()) as textassistant:
-                with language_processor(aiy.i18n.get_language_code()) as lang_processor:
-                    self._assistant = assistant
-                    self._text_assistant = textassistant
-                    self._language_processor = lang_processor
-                    for event in assistant.start():
-                        self._process_event(event)
+                self._assistant = assistant
+                self._text_assistant = textassistant
+                for event in assistant.start():
+                    self._process_event(event)
 
     def _process_event(self, event):
         status_ui = aiy.voicehat.get_status_ui()
@@ -62,9 +59,6 @@ class MyAssistant(object):
         elif event.type == EventType.ON_RECOGNIZING_SPEECH_FINISHED and event.args:
             print('You said: ', event.args['text'])
             text = event.args['text'].lower()
-
-            keywords = self._language_processor.language_processing(text)
-            print(keywords)
 
             db = db_handler()
             response = db.findResponse(text)
