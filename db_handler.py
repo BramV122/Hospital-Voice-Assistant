@@ -2,8 +2,7 @@
 
 import pymysql
 
-#HOST = "10.42.0.1"
-HOST = "Localhost"
+HOST = "10.42.0.1"
 USER = "Voicekit"
 PASSWD = "Voicekit"
 
@@ -43,8 +42,9 @@ class db_handler():
                 responses.append(answer[0])
 
         if len(responses) > 1 or len(responses) == 0:
-            print("no responses or multiple responses found")
+            print("no responses or multiple responses found in public database")
         else:
+            print("response in database found public database")
             query = "SELECT Response FROM Responses WHERE ID = '%s'" % responses[0]
             cursor.execute(query)
 
