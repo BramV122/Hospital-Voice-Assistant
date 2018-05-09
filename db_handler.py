@@ -44,7 +44,7 @@ class db_handler():
         if len(responses) > 1 or len(responses) == 0:
             print("no responses or multiple responses found in public database")
         else:
-            print("response in database found public database")
+            print("response in public database found")
             query = "SELECT Response FROM Responses WHERE ID = '%s'" % responses[0]
             cursor.execute(query)
 

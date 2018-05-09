@@ -80,7 +80,7 @@ class SampleTextAssistant(object):
             return buf
 
         def getVolume():
-            f = open("home/pi/.config/google-assistant-library/assistant/volume/system", "r")
+            f = open("/home/pi/.config/google-assistant-library/assistant/volume/system", "r")
             volume = f.readline()
             volume = int(float(volume) * 100)
             return volume
